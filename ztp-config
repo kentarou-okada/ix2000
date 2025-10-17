@@ -1,0 +1,59 @@
+① 固定IPの設定（IX2000側）
+ZTPはインターネット接続が必須なので、WANインターフェースに固定IPを設定します。
+ip wan1 address 192.168.1.10/24
+ip wan1 gateway 192.168.1.1
+ip wan1 dns 8.8.8.8  # Google DNSなど
+
+② NetMeister接続設定（CLI）
+NetMeisterに接続するための最低限の設定です：
+nm ip enable
+nm account <グループID> password plain <パスワード>
+
+③ NetMeister側の事前準備
+
+NetMeisterにログイン
+「装置登録」画面で以下を入力：
+
+MACアドレス（IX2000のラベルに記載）
+装置名（任意）
+グループID
+適用するコンフィグファイル（.cfg）
+
+④ ZTP動作の流れ
+
+IX2000の電源を入れる
+WAN1インターフェースからインターネットに接続
+DNS解決 → NetMeisterに接続
+MACアドレスで識別 → コンフィグ自動適用
+NetMeister上でステータス確認
+
+✅ 注意点
+
+インターネット接続 WAN1に固定IP＋DNS設定が必要
+DNS解決 nm ip enableでNetMeisterのFQDNを解決
+セキュリティ 設定後はnm accountを削除するかACLで制限推奨
+ファームウェア ZTP対応バージョンであること（Ver.10.10以降など）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+項目内容インターネット接続WAN1に固定IP＋DNS設定が必要DNS解決nm ip enableでNetMeisterのFQDNを解決セキュリティ設定後はnm accountを削除するかACLで制限推奨ファームウェアZTP対応バージョンであること（Ver.10.10以降など）
