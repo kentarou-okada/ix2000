@@ -35,25 +35,34 @@ DNS解決 nm ip enableでNetMeisterのFQDNを解決
 ファームウェア ZTP対応バージョンであること（Ver.10.10以降など）
 
 
+====================================================
+このテンプレートは、固定IPでWAN接続し、NetMeisterに自動登録される構成を想定しています。
+hostname IX2000-ZTP
+ip wan1 address 192.168.1.10/24
+ip wan1 gateway 192.168.1.1
+ip wan1 dns 8.8.8.8
+
+nm ip enable
+nm account your-group-id password plain your-password
+
+administrator password your-secure-password
+
+ssh-server ip enable
+ssh-server ip port 22
+
+save
+
+🔒 注意：nm accountのパスワードは平文で記述されるため、ZTP完了後に削除するかACLで制限してください。
+🔁 saveを忘れると再起動時に設定が消えます。
+
+✅ ACL制限の設定例（SSHアクセス制限）
+SSHポート（例：22）へのアクセスを特定のIPアドレス帯のみに制限する設定です。
+① ACL定義
+ip access-list ssh-in permit tcp src 192.168.10.0/24 dest any dport eq 22
+ip access-list ssh-in permit tcp src 10.0.0.0/8 dest any dport eq 22
+ip access-list ssh-in deny ip src any dest any
+
+② ACLの適用（SSHサービスに）
+ssh-server ip access-list ssh-in
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-項目内容インターネット接続WAN1に固定IP＋DNS設定が必要DNS解決nm ip enableでNetMeisterのFQDNを解決セキュリティ設定後はnm accountを削除するかACLで制限推奨ファームウェアZTP対応バージョンであること（Ver.10.10以降など）
